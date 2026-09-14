@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho Game VIP</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif;}
+        body {background:linear-gradient(135deg,#0f172a,#1e293b); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
+        .card {background:#fff; border-radius:20px; padding:35px 25px; max-width:420px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.3);}
+        h1 {text-align:center; color:#1e293b; font-size:22px; margin-bottom:8px;}
+        .subtitle {text-align:center; color:#64748b; font-size:14px; margin-bottom:25px;}
+        .input-box {width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:10px; font-size:15px; margin-bottom:15px;}
+        .input-box:focus {outline:none; border-color:#3b82f6;}
+        .btn {width:100%; padding:15px; background:linear-gradient(90deg,#3b82f6,#06b6d4); color:white; border:none; border-radius:10px; font-size:16px; font-weight:bold; cursor:pointer; transition:.3s;}
+        .btn:hover {transform:translateY(-2px);}
+        .result {margin-top:20px; padding:18px; border-radius:10px; display:none;}
+        .success {background:#f0fdf4; border:1px solid #86efac; color:#166534; display:block;}
+        .error {background:#fef2f2; border:1px solid #fecaca; color:#991b1b; display:block;}
+        .download-link {display:inline-block; margin-top:12px; padding:10px 24px; background:#16a34a; color:white; border-radius:8px; text-decoration:none; font-weight:bold;}
+        .admin-link {display:block; text-align:center; margin-top:25px; color:#64748b; font-size:13px; text-decoration:none;}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🚀 Kho Game VIP</h1>
+        <p class="subtitle">Nhập UDID của bạn để nhận file cài đặt</p>
+        <input type="text" id="udidInput" class="input-box" placeholder="VD: xxxxxxx-xxxxxxxxxxxxxxxx">
+        <button class="btn" onclick="checkUDID()">🔍 Kiểm tra & Tải</button>
+        <div id="resultBox" class="result"></div>
+        <a href="admin.html" class="admin-link">🔐 Trang quản lý</a>
+    </div>
+    <script src="udid-data.js"></script>
+    <script>
+        function checkUDID() {
+            const input = document.getElementById('udidInput').value.trim();
+            const box = document.getElementById('resultBox');
+            box.style.display = 'none';
+            if (!input) {
+                box.className = 'result error';
+                box.innerHTML = '⚠️ Vui lòng nhập UDID!';
+                return;
+            }
+            if (UDID_DATA[input]) {
+                box.className = 'result success';
+                box.innerHTML = `✅ UDID hợp lệ!<br>File của bạn đã sẵn sàng<br><a href="${UDID_DATA[input]}" class="download-link" target="_blank">⬇️ Tải File IPA</a>`;
+            } else {
+                box.className = 'result error';
+                box.innerHTML = '❌ UDID chưa được cấp quyền.<br>Vui lòng liên hệ quản lý!';
+            }
+        }
+    </script>
+</body>
+</html>
