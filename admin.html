@@ -3,42 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔐 Quản lý UDID</title>
+    <title>🔐 Quản Lý Đa Chứng Chỉ & IPA</title>
     <style>
         * {margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif;}
-        body {background:#f1f5f9; padding:30px 20px;}
-        .wrap {max-width:650px; margin:0 auto;}
+        body {background:#f0f4f8; padding:30px 20px;}
+        .wrap {max-width:600px; margin:0 auto;}
         h1 {text-align:center; color:#1e293b; margin-bottom:30px; font-size:22px;}
-        .note {background:#eff6ff; border:1px solid #bfdbfe; padding:18px; border-radius:10px; margin-bottom:25px; color:#1e40af; font-size:14px; line-height:1.7;}
-        .code-box {background:#1e293b; color:#fbbf24; padding:18px; border-radius:8px; font-family:monospace; font-size:13px; line-height:2; margin-bottom:15px;}
-        .btn-copy {padding:10px 20px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;}
-        .btn-copy:hover {background:#2563eb;}
-        .back {display:inline-block; margin-top:25px; color:#3b82f6; text-decoration:none;}
+        .section {background:#fff; border-radius:12px; padding:25px; margin-bottom:25px; box-shadow:0 2px 8px rgba(0,0,0,.06);}
+        h2 {font-size:16px; color:#334155; margin-bottom:18px; display:flex; align-items:center; gap:8px;}
+        .badge {background:#dbeafe; color:#1d4ed8; font-size:12px; padding:2px 8px; border-radius:12px;}
+        input[type="text"], input[type="password"] {width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:8px; font-size:14px; margin-bottom:15px;}
+        input:focus {outline:none; border-color:#3b82f6;}
+        .file-input {border:2px dashed #cbd5e1; border-radius:8px; padding:20px; text-align:center; margin-bottom:15px; cursor:pointer; transition:.2s;}
+        .file-input:hover {border-color:#3b82f6; background:#eff6ff;}
+        .btn {width:100%; padding:13px; background:linear-gradient(90deg,#3b82f6,#2563eb); color:white; border:none; border-radius:8px; font-size:15px; font-weight:bold; cursor:pointer; transition:.2s;}
+        .btn:hover {transform:translateY(-1px);}
+        .search-box {position:relative; margin-bottom:15px;}
+        .search-box input {padding-left:38px;}
+        .search-icon {position:absolute; left:12px; top:13px; color:#94a3b8;}
+        .empty {text-align:center; color:#94a3b8; padding:20px; font-size:14px;}
+        .udid-item {padding:12px; background:#f8fafc; border-radius:6px; margin-bottom:8px; border-left:3px solid #3b82f6; display:flex; justify-content:space-between; align-items:center;}
+        .delete-btn {background:#fee2e2; color:#dc2626; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:13px;}
+        .export-box {background:#fef3c7; border:1px solid #fcd34d; padding:15px; border-radius:8px; margin-top:20px; display:none;}
+        .export-box textarea {width:100%; height:100px; margin-top:10px; padding:10px; border-radius:4px; border:1px solid #fcd34d; background:#fffbeb; font-size:12px; resize:none;}
+        .copy-btn {background:#f59e0b; color:white; border:none; padding:8px 16px; border-radius:4px; margin-top:8px; cursor:pointer; font-weight:bold;}
+        .back {display:inline-block; margin-top:20px; color:#3b82f6; text-decoration:none; text-align:center; width:100%;}
     </style>
 </head>
 <body>
     <div class="wrap">
-        <h1>🔐 Hướng Dẫn Thêm Khách</h1>
-        
-        <div class="note">
-            <strong>📌 Cách làm đơn giản:</strong><br>
-            1️⃣ Vào file <code>udid-data.js</code> → nhấn biểu tượng ✏️ sửa<br>
-            2️⃣ Thêm dòng mới theo mẫu bên dưới<br>
-            3️⃣ Nhấn "Commit changes" → xong! Khách có thể tải ngay
+        <h1>🔐 Quản Lý Đa Chứng Chỉ & IPA</h1>
+
+        <!-- PHẦN 1: THÊM CHỨNG CHỈ -->
+        <div class="section">
+            <h2>1. Thêm Chứng Chỉ Mới <span class="badge">.zip chứa .p12 & .mobileprovision</span></h2>
+            
+            <input type="text" id="certName" placeholder="VD: Slot khách A / Slot VIP...">
+            
+            <div class="file-input" onclick="document.getElementById('certFile').click()">
+                <input type="file" id="certFile" style="display:none;" accept=".zip">
+                <span id="certFileName">📁 Chọn tệp ZIP chứa chứng chỉ...</span>
+            </div>
+            
+            <input type="password" id="p12Pass" placeholder="Mật khẩu P12">
+            
+            <button class="btn" onclick="addCertificate()">➕ Thêm vào Kho Chứng Chỉ</button>
         </div>
 
-        <div class="code-box">
-// ✅ Mẫu thêm khách mới:
-"UDID-CỦA-KHÁCH": "LINK-FILE-IPA-CỦA-HỌ",
-
-// 📌 Ví dụ:
-"abc123-def456ghijklmnop7890": "https://github.com/tentaikhoan/khogamevip2/releases/download/v1.0/game.ipa",
+        <!-- PHẦN 2: DANH SÁCH CHỨNG CHỈ -->
+        <div class="section">
+            <h2>2. Danh sách Chứng Chỉ Đã Lưu</h2>
+            
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchCert" placeholder="Nhập tên gợi nhớ để tìm kiếm chứng chỉ..." oninput="filterCerts()">
+            </div>
+            
+            <div id="certList">
+                <div class="empty">Chưa có chứng chỉ nào</div>
+            </div>
         </div>
-        
-        <button class="btn-copy" onclick="navigator.clipboard.writeText('\"UDID-CỦA-KHÁCH\": \"LINK-FILE-IPA-CỦA-HỌ\",')">📋 Sao chép mẫu</button>
-        
-        <br>
-        <a href="index.html" class="back">← Quay trang chính</a>
+
+        <!-- PHẦN 3: UPLOAD IPA & THÊM UDID -->
+        <div class="section">
+            <h2>3. Upload Game / Ứng Dụng (.ipa)</h2>
+            
+            <input type="text" id="appName" placeholder="VD: Liên Quân Mobile">
+            
+            <div class="file-input" onclick="document.getElementById('ipaFile').click()">
+                <input type="file" id="ipaFile" style="display:none;" accept=".ipa">
+                <span id="ipaFileName">📁 Chọn tệp IPA...</span>
+            </div>
+
+            <input type="text" id="udidInput" placeholder="Nhập UDID của khách (VD: xxxxxxxx-xxxxxxxxxxxxxxxx)">
+            
+            <input type="text" id="ipaLink" placeholder="🔗 Link trực tiếp đến file IPA (sẽ tự tạo sau khi upload)" readonly>
+            
+            <button class="btn" onclick="addUDID()">➕ Thêm UDID & Lưu vào Kho</button>
+        </div>
+
+        <!-- PHẦN 4: DANH SÁCH UDID & LINK IPA -->
+        <div class="section">
+            <h2>4. Danh Sách Khách & Link IPA</h2>
+            <div id="udidList">
+                <div class="empty">Chưa có UDID nào được thêm</div>
+            </div>
+        </div>
+
+        <!-- PHẦN 5: XUẤT DỮ LIỆU ĐỂ DÁN VÀO GITHUB -->
+        <div class="section">
+            <h2>📤 Xuất Dữ Liệu → Dán vào file udid-data.js</h2>
+            <button class="btn" onclick="exportData()" style="background:#16a34a;">📋 Tạo dữ liệu để sao chép</button>
+            
+            <div class="export-box" id="exportBox">
+                <strong>📌 Nội dung sao chép và thay thế trong file udid-data.js:</strong>
+                <textarea id="exportOutput" readonly></textarea>
+                <button class="copy-btn" onclick="copyExport()">📋 Sao chép nội dung</button>
+            </div>
+        </div>
+
+        <a href="index.html" class="back">← Quay Trang Chính</a>
     </div>
+
+    <script>
+        // Lưu dữ liệu trình duyệt
+        let certificates = JSON.parse(localStorage.getItem('certificates') || '[]');
+        let udidData = JSON.parse(localStorage.getItem('udidData') || '[]');
+
+        // Hiển thị tên file khi chọn
+        document.getElementById('certFile').addEventListener('change', function() {
+            const name = this.files[0]?.name || '📁 Chọn tệp ZIP chứa chứng chỉ...';
+            document.getElementById('certFileName').textContent = name;
+        });
+        document.getElementById('ipaFile').addEventListener('change', function() {
+            const name = this.files[0]?.name || '📁 Chọn tệp IPA...';
+            document.getElementById('ipaFileName').textContent = name;
+        });
+
+        // Thêm chứng chỉ
+        function addCertificate() {
+            const name = document.getElementById('certName').value.trim();
+            const file = document.getElementById('certFile').files[0];
+            const pass = document.getElementById('p12Pass').value;
+            
+            if (!name || !file) { alert('⚠️ Vui lòng điền đầy đủ thông tin!'); return; }
+            
+            certificates.unshift({ id: Date.now(), name, fileName: file.name, password: pass });
+            localStorage.setItem('certificates', JSON.stringify(certificates));
+            
+            document.getElementById('certName').value = '';
+            document.getElementById('p12Pass').value = '';
+            document.getElementById('certFileName').textContent = '📁 Chọn tệp ZIP chứa chứng chỉ...';
+            
+            renderCertList();
+            alert('✅ Thêm chứng chỉ thành công!');
+        }
+
+        // Hiển thị danh sách chứng chỉ
+        function renderCertList(filter = '') {
+            const list = document.getElementById('certList');
+            const filtered = certificates.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty">Không tìm thấy chứng chỉ nào</div>';
+                return;
+            }
+            
+            list.innerHTML = filtered.map(cert => `
+                <div class="udid-item">
+                    <div>
+                        <strong>${cert.name}</strong><br>
+                        <small style="color:#64748b">${cert.fileName}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteCert(${cert.id})">🗑️ Xóa</button>
+                </div>
+            `).join('');
+        }
+
+        function filterCerts() {
+            renderCertList(document.getElementById('searchCert').value);
+        }
+
+        function deleteCert(id) {
+            if (confirm('Bạn có chắc muốn xóa?')) {
+                certificates = certificates.filter(c => c.id !== id);
+                localStorage.setItem('certificates', JSON.stringify(certificates));
+                renderCertList();
+            }
+        }
+
+        // Thêm UDID & Link IPA
+        function addUDID() {
+            const appName = document.getElementById('appName').value.trim();
+            const udid = document.getElementById('udidInput').value.trim();
+            const link = document.getElementById('ipaLink').value.trim() || `https://github.com/tinhyeunhobe1-eng/khogamevip2/raw/main/${appName || 'game'}.ipa`;
+            
+            if (!appName || !udid) { alert('⚠️ Vui lòng điền Tên ứng dụng và UDID!'); return; }
+            
+            udidData.unshift({ id: Date.now(), appName, udid, link });
+            localStorage.setItem('udidData', JSON.stringify(udidData));
+            
+            document.getElementById('appName').value = '';
+            document.getElementById('udidInput').value = '';
+            document.getElementById('ipaLink').value = '';
+            document.getElementById('ipaFileName').textContent = '📁 Chọn tệp IPA...';
+            
+            renderUDIDList();
+            alert('✅ Thêm UDID thành công! Bây giờ nhấn "Tạo dữ liệu để sao chép" bên dưới để cập nhật lên GitHub nhé!');
+        }
+
+        // Hiển thị danh sách UDID
+        function renderUDIDList() {
+            const list = document.getElementById('udidList');
+            if (udidData.length === 0) {
+                list.innerHTML = '<div class="empty">Chưa có UDID nào được thêm</div>';
+                return;
+            }
+            list.innerHTML = udidData.map(item => `
+                <div class="udid-item">
+                    <div style="max-width:70%">
+                        <strong>${item.appName}</strong><br>
+                        <small style="color:#64748b; word-break:break-all">${item.udid}</small><br>
+                        <small style="color:#059669; font-size:11px; word-break:break-all">${item.link}</small>
+                    </div>
+                    <button class="delete-btn" onclick="deleteUDID(${item.id})">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteUDID(id) {
+            if (confirm('Xóa UDID này?')) {
+                udidData = udidData.filter(item => item.id !== id);
+                localStorage.setItem('udidData', JSON.stringify(udidData));
+                renderUDIDList();
+            }
+        }
+
+        // Xuất dữ liệu cho GitHub
+        function exportData() {
+            const lines = udidData.map(item => 
+                `  "${item.udid}": "${item.link}",`
+            ).join('\n');
+            
+            const output = `const UDID_DATA = {\n${lines}\n};`;
+            
+            document.getElementById('exportOutput').value = output;
+            document.getElementById('exportBox').style.display = 'block';
+        }
+
+        function copyExport() {
+            const textarea = document.getElementById('exportOutput');
+            textarea.select();
+            document.execCommand('copy');
+            alert('✅ Đã sao chép! Bây giờ:\n1. Mở file udid-data.js trên GitHub\n2. Xóa hết nội dung cũ\n3. Dán nội dung vừa sao chép vào\n4. Nhấn Commit changes → Xong!');
+        }
+
+        // Khởi tạo
+        renderCertList();
+        renderUDIDList();
+    </script>
 </body>
 </html>
