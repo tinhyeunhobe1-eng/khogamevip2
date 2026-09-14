@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Quản lý UDID</title>
+    <style>
+        * {margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif;}
+        body {background:#f1f5f9; padding:30px 20px;}
+        .wrap {max-width:650px; margin:0 auto;}
+        h1 {text-align:center; color:#1e293b; margin-bottom:30px; font-size:22px;}
+        .note {background:#eff6ff; border:1px solid #bfdbfe; padding:18px; border-radius:10px; margin-bottom:25px; color:#1e40af; font-size:14px; line-height:1.7;}
+        .code-box {background:#1e293b; color:#fbbf24; padding:18px; border-radius:8px; font-family:monospace; font-size:13px; line-height:2; margin-bottom:15px;}
+        .btn-copy {padding:10px 20px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;}
+        .btn-copy:hover {background:#2563eb;}
+        .back {display:inline-block; margin-top:25px; color:#3b82f6; text-decoration:none;}
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>🔐 Hướng Dẫn Thêm Khách</h1>
+        
+        <div class="note">
+            <strong>📌 Cách làm đơn giản:</strong><br>
+            1️⃣ Vào file <code>udid-data.js</code> → nhấn biểu tượng ✏️ sửa<br>
+            2️⃣ Thêm dòng mới theo mẫu bên dưới<br>
+            3️⃣ Nhấn "Commit changes" → xong! Khách có thể tải ngay
+        </div>
+
+        <div class="code-box">
+// ✅ Mẫu thêm khách mới:
+"UDID-CỦA-KHÁCH": "LINK-FILE-IPA-CỦA-HỌ",
+
+// 📌 Ví dụ:
+"abc123-def456ghijklmnop7890": "https://github.com/tentaikhoan/khogamevip2/releases/download/v1.0/game.ipa",
+        </div>
+        
+        <button class="btn-copy" onclick="navigator.clipboard.writeText('\"UDID-CỦA-KHÁCH\": \"LINK-FILE-IPA-CỦA-HỌ\",')">📋 Sao chép mẫu</button>
+        
+        <br>
+        <a href="index.html" class="back">← Quay trang chính</a>
+    </div>
+</body>
+</html>
