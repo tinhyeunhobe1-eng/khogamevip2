@@ -1,3 +1,3 @@
 const UDID_DATA = {
-  "UDID-của-khách": "link-file-ipa-của-họ",
+  "00008110-000869CE110A801E": "https://github.com/tinhyeunhobe1-eng/khogamevip2/raw/main/Liên quân Mobile.ipa",
 };
